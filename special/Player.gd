@@ -11,8 +11,6 @@ func _ready():
 
 func _physics_process(delta):
 	
-	print(delta)
-	
 	var motion = Vector2()
 	
 	# check if button pressed
