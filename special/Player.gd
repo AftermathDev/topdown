@@ -25,6 +25,6 @@ func _physics_process(delta):
 	
 	# now apply that to the player
 	motion = motion.normalized()                 # make it so you don't go faster when diagnal
-	motion = move_and_slide(motion * MOVESPEED) # make the player collidable
-	look_at(get_global_mouse_position())        # as with most top-down shooters, you should be able to aim
+	motion = move_and_slide(motion * MOVESPEED)  # make the player collidable
+	look_at(get_global_mouse_position())         # as with most top-down shooters, you should be able to aim
 	
