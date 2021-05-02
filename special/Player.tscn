@@ -37,3 +37,4 @@ shape = SubResource( 3 )
 current = true
 process_mode = 0
 smoothing_enabled = true
+smoothing_speed = 8.0
