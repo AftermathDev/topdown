@@ -3,8 +3,10 @@ extends KinematicBody2D
 const MOVESPEED = 500
 
 onready var root = get_tree().get_root()
+onready var raycast = $RayCast2D
 
 var health = 100
+var damage = 20
 
 func _ready():
 	pass # Replace with function body.
@@ -28,3 +30,7 @@ func _physics_process(delta):
 	motion = move_and_slide(motion * MOVESPEED)  # make the player collidable
 	look_at(get_global_mouse_position())         # as with most top-down shooters, you should be able to aim
 	
+	if Input.is_action_pressed("player_fire"):
+		var collided = raycast.get_collider()
+		if raycast.is_colliding() and collided.has_method("damage"):
+			collided.damage(damage)
