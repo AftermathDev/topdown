@@ -4,6 +4,7 @@ const MOVESPEED = 500
 
 onready var root = get_tree().get_root()
 onready var raycast = $RayCast2D
+onready var Network = get_node("/NetworkService")
 
 var health = 100
 var damage = 20
@@ -34,3 +35,4 @@ func _physics_process(_delta):
 		var collided = raycast.get_collider()
 		if raycast.is_colliding() and collided.has_method("damage"):
 			collided.damage(damage)
+
