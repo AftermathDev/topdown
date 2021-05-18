@@ -4,7 +4,7 @@ const MOVESPEED = 500
 
 onready var root = get_tree().get_root()
 onready var raycast = $RayCast2D
-onready var Network = get_node("/NetworkService")
+onready var Network = root.get_node("game/NetworkService")
 
 var health = 100
 var damage = 20

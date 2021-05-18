@@ -1,4 +1,8 @@
-[gd_scene format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://interface/Log.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxEmpty" id=1]
 
 [node name="Interface" type="CanvasLayer"]
 
@@ -7,6 +11,24 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -90.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Log" type="Panel" parent="."]
+margin_right = 356.0
+margin_bottom = 510.0
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Log"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }

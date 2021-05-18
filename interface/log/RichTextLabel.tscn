@@ -1,0 +1,8 @@
+[gd_scene format=2]
+
+[node name="RichTextLabel" type="RichTextLabel"]
+margin_right = 356.0
+margin_bottom = 15.0
+text = "got damn"
+fit_content_height = true
+scroll_active = false

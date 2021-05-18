@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var NetworkService = get_node("/NetworkService")
+onready var NetworkService = get_node("/root/game/NetworkService")
 
 
 func _ready():
