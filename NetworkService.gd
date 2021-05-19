@@ -3,6 +3,7 @@ extends Node
 onready var Log = get_node("/root/game/Interface/Log")
 
 var socketClient
+var buffer = {}
 
 func _ready():
 	
@@ -22,14 +23,12 @@ func _ready():
 	if OS.is_debug_build():
 		URL = "ws://10.0.0.132:25454"
 		
-	# finally, connect to the server and print the result
-	
+	# finally, connect to the server
 	Log.append("connecting to " + URL)
-	Log.append("result is " + str(socketClient.connect_to_url(URL, PoolStringArray())))
+	socketClient.connect_to_url(URL, PoolStringArray())
 	
-	# tell godot that we have attempted to connect and to use their 
-	# high-level multiplayer API
-	# get_tree().set_network_peer(socketClient)
+	# tell the websocket that we should be sending text
+	socketClient.get_peer(1).set_write_mode(WebSocketPeer.WRITE_MODE_BINARY)
 
 # set to run every frame, where "delta" is time since the previous frame
 func _process(delta):
@@ -41,10 +40,10 @@ func _process(delta):
 	# check if actually connected to a host
 	if socketClient.get_peer(1).is_connected_to_host():
 		# if so, send a reply
-		socketClient.get_peer(1).put_var("hello")
+		
 		
 		if socketClient.get_peer(1).get_available_packet_count() > 0:
-			var reply = socketClient.get_peer(1).get_var()
+			var reply = socketClient.get_peer(1).get_packet().get_string_from_utf8()
 			Log.append("got back %s" % str(reply))
 		
 	
@@ -58,3 +57,4 @@ func ws_connection_closed():
 func ws_connection_error():
 	Log.append("connection error")
 
+#func 

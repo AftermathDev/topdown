@@ -1,8 +1,6 @@
 extends Panel
 
-var thread = Thread.new()
-
-onready var text = preload("log/RichTextLabel.tscn")
+var thread
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -10,10 +8,11 @@ func _ready():
 
 func append(_text):
 	print(_text)
-	thread.start(self, "_threaded_process", _text)
-	
-func _threaded_process(t):
+	var text = preload("log/RichTextLabel.tscn")
 	var r = text.instance()
-	r.text = t
+	r.text = _text
+	self.get_node("VBoxContainer").add_child(r)
 	yield(get_tree().create_timer(10.0), "timeout")
 	r.queue_free()
+	
+	
