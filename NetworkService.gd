@@ -21,7 +21,7 @@ func _ready():
 	# directly to loopback adapter rather than going the long way back
 	var URL = "ws://73.252.145.40:25454"
 	if OS.is_debug_build():
-		URL = "ws://10.0.0.132:25454"
+		URL = "ws://10.0.0.130:25454"
 		
 	# finally, connect to the server
 	Log.append("connecting to " + URL)
