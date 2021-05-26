@@ -2,7 +2,6 @@ extends Node
 
 onready var Log = get_node("/root/game/Interface/Log")
 onready var player = get_node("/root/game/Client/Player")
-onready var enemy = preload("res://special/Enemy.tscn")
 
 var socketClient
 var buffer = {}
@@ -58,24 +57,25 @@ func _process(delta):
 		if socketClient.get_peer(1).get_available_packet_count() > 0:
 			var reply = JSON.parse(socketClient.get_peer(1).get_packet().get_string_from_utf8()).result
 			
+			#print(str(reply))
+			
 			id = reply["connection"]
 			var _players = reply["players"]
 			_players.erase(str(id))
 			
-			print(str(_players))
-			
 			var x = 0
 			
-			if not (_players.empty() or players.empty()):
+			if not (_players.empty()):
 				if _players.size() != players.size():
+					Log.append("player list changed")
 					players = {}
 					for i in get_node("/root/game/Enemy").get_children():
 						i.queue_free()
 					
 					for i in _players:
-						players[i] = enemy.instance()
-						
-						get_node("/root/game/Enemy").add_child(players[i]["instance"])
+						var enemy = preload("res://special/Enemy.tscn").instance()
+						players[str(i)] = enemy
+						get_node("/root/game/Enemy").add_child(enemy)
 					
 			if get_node("/root/game/Enemy").get_child_count() == _players.size():
 				for i in players:
