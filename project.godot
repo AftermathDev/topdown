@@ -24,6 +24,10 @@ config/name="Topdown"
 run/main_scene="res://game.tscn"
 config/icon="res://icon.png"
 
+[debug]
+
+settings/fps/force_fps=30
+
 [gdnative]
 
 singletons=[ "res://git_api.gdnlib" ]

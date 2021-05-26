@@ -1,9 +1,14 @@
 extends Node
 
 onready var Log = get_node("/root/game/Interface/Log")
+onready var player = get_node("/root/game/Client/Player")
+onready var enemy = preload("res://special/Enemy.tscn")
 
 var socketClient
 var buffer = {}
+var debug = OS.is_debug_build()
+var players = {}
+var id
 
 func _ready():
 	
@@ -20,7 +25,7 @@ func _ready():
 	# check if the game is a debug build, if it is then just connect
 	# directly to loopback adapter rather than going the long way back
 	var URL = "ws://73.252.145.40:25454"
-	if OS.is_debug_build():
+	if debug:
 		URL = "ws://10.0.0.130:25454"
 		
 	# finally, connect to the server
@@ -40,19 +45,52 @@ func _process(delta):
 	# check if actually connected to a host
 	if socketClient.get_peer(1).is_connected_to_host():
 		# if so, send a reply
+		buffer = {
+			"x":player.position.x,
+			"y":player.position.y,
+			"rot":player.rotation_degrees
+		}
 		
+		#Log.append(JSON.print(buffer))
+		
+		socketClient.get_peer(1).put_packet(JSON.print(buffer).to_utf8())
 		
 		if socketClient.get_peer(1).get_available_packet_count() > 0:
-			var reply = socketClient.get_peer(1).get_packet().get_string_from_utf8()
-			Log.append("got back %s" % str(reply))
+			var reply = JSON.parse(socketClient.get_peer(1).get_packet().get_string_from_utf8()).result
+			
+			id = reply["connection"]
+			var _players = reply["players"]
+			_players.erase(str(id))
+			
+			print(str(_players))
+			
+			var x = 0
+			
+			if not (_players.empty() or players.empty()):
+				if _players.size() != players.size():
+					players = {}
+					for i in get_node("/root/game/Enemy").get_children():
+						i.queue_free()
+					
+					for i in _players:
+						players[i] = enemy.instance()
+						
+						get_node("/root/game/Enemy").add_child(players[i]["instance"])
+					
+			if get_node("/root/game/Enemy").get_child_count() == _players.size():
+				for i in players:
+					players[i].position.x = _players[i].x
+					players[i].position.y = _players[i].y
+					players[i].rotation_degrees = _players[i].rot
+			
 		
 	
 # the previously connected remotes, nothing too interesting going on down here
 func ws_connection_established(protocol):
 	Log.append("success! connection established")
 
-func ws_connection_closed():
-	Log.append("connection closed")
+func ws_connection_closed(reason):
+	Log.append("connection closed : %s" % reason)
 
 func ws_connection_error():
 	Log.append("connection error")
